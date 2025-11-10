@@ -25,7 +25,7 @@ public class TestJUnit {
     * */
     @Test
     public void CategoriaTest() {
-        //TODO: aprender como fazer testes de enum
+        // aprender como fazer testes de enum
         Scanner sc = new Scanner(System.in);
         EnumCategoriaFilmes filmes;
         EnumCategoriaLivros livros;

@@ -1,5 +1,6 @@
 package TestJUnit;
 
+import controller.GerenciadorMidia;
 import modelo.*;
 import org.junit.jupiter.api.Test;
 
@@ -11,6 +12,7 @@ import java.util.Scanner;
 
 
 public class TestJUnit {
+
     /*
     * Teste de modelos
     * */
@@ -71,6 +73,7 @@ minutos, músicas em segundos e livros em páginas
         System.out.println(musica);
     }
     @Test
+    //todo refazer com novos metodos
     public void CriarArquivoTest() {
         /*
         * Criar um arquivo com objeto salvo
@@ -78,7 +81,7 @@ minutos, músicas em segundos e livros em páginas
 
         EnumCategoriaMusicas categoria = EnumCategoriaMusicas.KPOP;
         Pessoa robinho = new Pessoa("Robinho");
-        Midia musica = new Musica("A grande Salada",10, "/desktop", 10,robinho , categoria );
+        Midia musica = new Musica("A grande Salada",10, "C:\\Users\\gafernandes\\Desktop\\oi.tpoo", 10,robinho , categoria );
 
         File f = new File("C:\\Users\\gafernandes\\Desktop\\oi.tpoo");
         try(FileOutputStream fos = new FileOutputStream(f);
@@ -96,18 +99,18 @@ minutos, músicas em segundos e livros em páginas
         JFileChooser fileChooser = new JFileChooser(FileSystemView.getFileSystemView());
         fileChooser.setDialogTitle("Salvar arquivo");
 
-        //NÃO PRECISA IMPLEMENTAR, estarei usando somente como teste
-        JFrame frame = new JFrame("Save File Dialog Example");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(400, 300);
-        frame.setVisible(true);
-        //------------------------------------------------------------
+            //NÃO PRECISA IMPLEMENTAR, estarei usando somente como teste
+            JFrame frame = new JFrame("Save File Dialog Example");
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            frame.setSize(400, 300);
+            frame.setVisible(true);
+            //------------------------------------------------------------
 
         int resposta = fileChooser.showOpenDialog(
                 frame /* <- esta variavel é referente o componente de tela do view*/);
 
-        String path = "";
-        if(resposta != fileChooser.CANCEL_OPTION){
+            String path = "";
+         if(resposta != fileChooser.CANCEL_OPTION){
             path = fileChooser.getSelectedFile().toString();
         }
         Midia arquivo;
@@ -120,5 +123,32 @@ minutos, músicas em segundos e livros em páginas
         }
 
     }
+    @Test
+    public void moverArquivoTest() throws IOException {
+        //NÃO PRECISA IMPLEMENTAR, estarei usando somente como teste
+        JFrame frame = new JFrame("Save File Dialog Example");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(400, 300);
+        frame.setVisible(true);
+        //------------------------------------------------------------
+        EnumCategoriaMusicas categoria = EnumCategoriaMusicas.KPOP;
+        Pessoa robinho = new Pessoa("Robinho");
+        Midia musica = new Musica("A grande Salada",10, "C:\\Users\\PC\\Desktop", 10,robinho , categoria );
+        Midia musica2 = new Musica("A grande Salada",10, "C:\\Users\\PC\\Documents", 10,robinho , categoria );
 
+        GerenciadorMidia g = new GerenciadorMidia();
+       g.salvar(musica);
+        g.salvar(musica2);
+
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setDialogTitle("Selecione local");
+        fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+        fileChooser.showOpenDialog(frame);
+        String path = fileChooser.getSelectedFile().getAbsolutePath();
+
+
+
+
+        System.out.println(g.mover(musica,path));
+    }
 }

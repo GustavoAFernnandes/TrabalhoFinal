@@ -12,6 +12,7 @@ public class Livro extends Midia {
         super(titulo,memoriaDisco, local, paginas);
         setAutor(autor);
         setCategoria(categoria);
+        if(true){}
     }
 
     public Pessoa getAutor() {

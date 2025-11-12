@@ -5,6 +5,7 @@ import modelo.*;
 import org.junit.jupiter.api.Test;
 
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.filechooser.FileSystemView;
 import java.io.*;
 import java.text.DecimalFormat;
@@ -27,7 +28,7 @@ public class TestJUnit {
     * */
     @Test
     public void CategoriaTest() {
-        //TODO: aprender como fazer testes de enum
+        // aprender como fazer testes de enum
         Scanner sc = new Scanner(System.in);
         EnumCategoriaFilmes filmes;
         EnumCategoriaLivros livros;
@@ -74,72 +75,44 @@ minutos, músicas em segundos e livros em páginas
     }
     @Test
     //todo refazer com novos metodos
-    public void CriarArquivoTest() {
+    public void CriarArquivoTest() throws IOException {
         /*
         * Criar um arquivo com objeto salvo
         * */
-
-        EnumCategoriaMusicas categoria = EnumCategoriaMusicas.KPOP;
-        Pessoa robinho = new Pessoa("Robinho");
-        Midia musica = new Musica("A grande Salada",10, "C:\\Users\\gafernandes\\Desktop\\oi.tpoo", 10,robinho , categoria );
-
-        File f = new File("C:\\Users\\gafernandes\\Desktop\\oi.tpoo");
-        try(FileOutputStream fos = new FileOutputStream(f);
-            ObjectOutputStream o = new ObjectOutputStream(fos);) {
-            o.writeObject(musica);
-            System.out.println("Salvo com sucesso!");
-            o.close();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-        System.out.println("------------------------------------------------------------------------------");
-        /*
-         * abrir e ler um arquivo com objeto salvo
-         * */
-        JFileChooser fileChooser = new JFileChooser(FileSystemView.getFileSystemView());
-        fileChooser.setDialogTitle("Salvar arquivo");
-
-            //NÃO PRECISA IMPLEMENTAR, estarei usando somente como teste
-            JFrame frame = new JFrame("Save File Dialog Example");
-            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            frame.setSize(400, 300);
-            frame.setVisible(true);
-            //------------------------------------------------------------
-
-        int resposta = fileChooser.showOpenDialog(
-                frame /* <- esta variavel é referente o componente de tela do view*/);
-
-            String path = "";
-         if(resposta != fileChooser.CANCEL_OPTION){
-            path = fileChooser.getSelectedFile().toString();
-        }
-        Midia arquivo;
-        try (FileInputStream fis = new FileInputStream(path);
-             ObjectInputStream ois = new ObjectInputStream(fis)) {
-            arquivo = (Musica) ois.readObject();
-            System.out.println("Arquivo lido com sucesso!: \n"+arquivo);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-
-    }
-    @Test
-    public void moverArquivoTest() throws IOException {
-        //NÃO PRECISA IMPLEMENTAR, estarei usando somente como teste
+        //usando somente como teste
         JFrame frame = new JFrame("Save File Dialog Example");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(400, 300);
         frame.setVisible(true);
         //------------------------------------------------------------
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setDialogTitle("Selecione local");
+        fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+        fileChooser.showOpenDialog(frame);
+        String path = fileChooser.getSelectedFile().getAbsolutePath();
+
         EnumCategoriaMusicas categoria = EnumCategoriaMusicas.KPOP;
+
         Pessoa robinho = new Pessoa("Robinho");
-        Midia musica = new Musica("A grande Salada",10, "C:\\Users\\PC\\Desktop", 10,robinho , categoria );
-        Midia musica2 = new Musica("A grande Salada",10, "C:\\Users\\PC\\Documents", 10,robinho , categoria );
-
+        Midia musica = new Musica("A grande Salada",10, "C:\\Users\\gafernandes\\Desktop", 10,robinho , categoria );
         GerenciadorMidia g = new GerenciadorMidia();
-       g.salvar(musica);
-        g.salvar(musica2);
 
+        g.salvar(musica);
+        System.out.println("------------------------------------------------------------------------------");
+
+
+
+
+
+    }
+    @Test
+    public void moverArquivoTest() throws IOException {
+        //usando somente como teste
+        JFrame frame = new JFrame("Save File Dialog Example");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(400, 300);
+        frame.setVisible(true);
+        //------------------------------------------------------------
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setDialogTitle("Selecione local");
         fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
@@ -147,8 +120,73 @@ minutos, músicas em segundos e livros em páginas
         String path = fileChooser.getSelectedFile().getAbsolutePath();
 
 
+        EnumCategoriaMusicas categoria = EnumCategoriaMusicas.KPOP;
+        Pessoa robinho = new Pessoa("Robinho");
+        Midia musica = new Musica("A grande Salada", 10, path, 10, robinho, categoria);
+
+        GerenciadorMidia g = new GerenciadorMidia();
+
+        g.salvar(musica);
 
 
-        System.out.println(g.mover(musica,path));
+        JFileChooser fileChooser2 = new JFileChooser();
+        fileChooser2.setDialogTitle("Selecione local");
+        fileChooser2.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+        fileChooser2.showOpenDialog(frame);
+        String path2 = fileChooser2.getSelectedFile().getAbsolutePath();
+
+
+        System.out.println(g.mover(musica, path2));
+    }
+
+    @Test
+    public void abrirArquivoTest() throws IOException {
+        GerenciadorMidia g = new GerenciadorMidia();
+        FileNameExtensionFilter filtro = new FileNameExtensionFilter("Arquivos tpoo (*.tpoo)", "tpoo");
+        JFileChooser fileChooser = new JFileChooser(FileSystemView.getFileSystemView());
+        fileChooser.setDialogTitle("Abrir arquivo");
+        fileChooser.setFileFilter(filtro);
+
+
+        //usando somente como teste
+        JFrame frame = new JFrame("Open File Dialog Example");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(400, 300);
+        frame.setVisible(true);
+        //------------------------------------------------------------
+
+        if (fileChooser.showOpenDialog(frame) == JFileChooser.APPROVE_OPTION) {
+
+            System.out.println(g.abrir(fileChooser.getSelectedFile().getAbsolutePath()));
+
+        }
+
+
+
+
+    }
+
+    @Test
+    public void carregarListaTest() throws IOException {
+        GerenciadorMidia g = new GerenciadorMidia();
+        FileNameExtensionFilter filtro = new FileNameExtensionFilter("Arquivos tpoo (*.tpoo)", "tpoo");
+        JFileChooser fileChooser = new JFileChooser(FileSystemView.getFileSystemView());
+        fileChooser.setDialogTitle("Abrir arquivo");
+        fileChooser.setFileFilter(filtro);
+
+
+
+        //usando somente como teste
+        JFrame frame = new JFrame("Open File Dialog Example");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(400, 300);
+        frame.setVisible(true);
+        //------------------------------------------------------------
+
+        if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+
+            System.out.println(g.abrir(fileChooser.getSelectedFile().getAbsolutePath()));
+
+        }
     }
 }

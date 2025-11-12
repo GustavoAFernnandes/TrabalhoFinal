@@ -27,7 +27,7 @@ public class Midia implements Serializable {
         throw new IllegalArgumentException("ERRO: Local Vazio");
 
         }
-        this.local = local;
+        this.local = local+"\\"+this.titulo+".tpoo";
     }
 
     public double getDuracao() {

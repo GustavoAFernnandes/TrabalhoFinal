@@ -11,15 +11,36 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class GerenciadorMidia {
-    private List<Midia> lista;
+    private List<Midia> lista =  new ArrayList<>();
 
     public GerenciadorMidia() {
 
-        criarListaVazia();
+        criarLista();
     }
-    public void criarListaVazia() {
+    public void criarLista() {
+        // O caminho "recursos" é relativo à pasta raiz do projeto (diretório de trabalho atual)
+        String nomeDaPasta = "src\\controller\\saves\\";
 
-        lista = new ArrayList<>();
+        File pasta = new File(nomeDaPasta);
+
+        if (pasta.exists() && pasta.isDirectory()) {
+            System.out.println("Pasta carregada com sucesso: " + pasta.getAbsolutePath());
+
+            // Exemplo de como listar os arquivos dentro dela
+            File[] arquivos = pasta.listFiles();
+            if (arquivos != null) {
+                System.out.println("Arquivos na pasta:");
+                for (File arquivo : arquivos) {
+                    lista.add(abrir(arquivo.getAbsolutePath()));
+                    System.out.println("- " + arquivo.getName());
+
+                }
+            }
+        } else {
+            System.out.println("A pasta não foi encontrada ou não é um diretório.");
+            System.out.println("caminho: " + pasta.getAbsolutePath());
+        }
+
     }
     public boolean salvar(Midia midia) throws IOException {
         if(midia == null  ) {
@@ -39,11 +60,19 @@ public class GerenciadorMidia {
         }else{
             File f = new File(midia.getLocal());
             try(FileOutputStream fos = new FileOutputStream(f);
-                ObjectOutputStream o = new ObjectOutputStream(fos);) {
+                ObjectOutputStream o = new ObjectOutputStream(fos)) {
                 o.writeObject(midia);
                 System.out.println("Salvo com sucesso!");
                 o.close();
                 lista.add(midia);
+                //salva no sistema
+                File saveFile = new File("src\\controller\\saves\\"+midia.getTitulo()+".tpoo");
+                try (FileOutputStream saveFos = new FileOutputStream(saveFile);
+                     ObjectOutputStream saveObject = new ObjectOutputStream(saveFos);){
+                    saveObject.writeObject(midia);
+                    System.out.println("Adicionado a Nuvem com sucesso!");
+                }
+
                 return true;
             } catch (Exception e) {
 
@@ -142,7 +171,7 @@ public class GerenciadorMidia {
         }else{
             for (int i = 0; i < lista.size(); i++) {
                 if (lista.get(i).getTitulo().equals(midia.getTitulo()) ) {
-                    if (!lista.get(i).getLocal().equals(novoLocal)){
+                    if (lista.get(i).getLocal().equals(novoLocal)){
 
                         return "Uma Midia com o mesmo Nome Já existente neste local";
                     }else {
@@ -162,22 +191,15 @@ public class GerenciadorMidia {
 
 
     public Midia abrir(String path) {
-        JFileChooser fileChooser = new JFileChooser(FileSystemView.getFileSystemView());
-        fileChooser.setDialogTitle("Abrir arquivo");
 
-        //NÃO PRECISA IMPLEMENTAR, estarei usando somente como teste
-        JFrame frame = new JFrame("Save File Dialog Example");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(400, 300);
-        frame.setVisible(true);
-        //------------------------------------------------------------
 
-        if (fileChooser.showOpenDialog(frame) == JFileChooser.APPROVE_OPTION) {
+        if (path != null && !path.trim().isEmpty()) {
             Midia arquivo;
             try (FileInputStream fis = new FileInputStream(path);
                  ObjectInputStream ois = new ObjectInputStream(fis)) {
                 arquivo = (Midia) ois.readObject();
-                System.out.println("Arquivo lido com sucesso!: \n"+arquivo);
+                salvar(arquivo);
+                System.out.println("Arquivo lido com sucesso!");
                 ois.close();
                 return arquivo;
             } catch (Exception e) {

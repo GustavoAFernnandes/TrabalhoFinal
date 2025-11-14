@@ -20,6 +20,13 @@ public class View extends JFrame {
         setVisible(true);
     }
 
+    /**
+     * @autor: Rebeca, Amanda e Gustavo
+     * @Versão: 1.0
+     * @throw: Exception Descrição da exceção lançada pelo metodo.
+     * @See: NomeDaClasseRelacionada
+     * @param: nome Descrição do parâmetro recebido pelo metodo, nome Detalhamento do parâmetro.
+     */
     private void configurarTela() {
         setTitle("Gerenciador de Mídias");
         setSize(700, 450);

@@ -19,3 +19,12 @@ public class Pessoa implements Serializable {
         this.nome = nome;
     }
 }
+
+/**
+ * @autor: Rebeca, Amanda e Gustavo
+ * @Versão: 1.0
+ * @throw: IllegalArgumentException Caso o nome seja nulo ou vazio.
+ * @See: Pessoa#getNome(), Pessoa#setNome(String)
+ * @param: nome Nome válido que será definido para a pessoa.
+ *
+ */

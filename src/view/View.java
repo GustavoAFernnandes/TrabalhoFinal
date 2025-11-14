@@ -5,6 +5,7 @@ import modelo.Midia;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.List;
 
 public class View extends JFrame {
 
@@ -62,7 +63,8 @@ public class View extends JFrame {
 
     private void carregarLista() {
         listModel.clear();
-        for (Midia m : gerenciador.listar(Midia.class)) {
+        List<Midia> lista = gerenciador.getLista();
+        for (Midia m : lista){
             listModel.addElement(m);
         }
     }
@@ -72,18 +74,15 @@ public class View extends JFrame {
     }
 
     private void abrirMidia() {
-        Midia m = getSelecionada();
-        if (m == null) {
-            JOptionPane.showMessageDialog(this, "Selecione uma mídia!");
-            return;
-        }
 
-        try {
-            Midia aberta = gerenciador.abrir(m.getLocal());
-            JOptionPane.showMessageDialog(this, aberta.toString(), "Mídia", JOptionPane.INFORMATION_MESSAGE);
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(this, "Erro ao abrir: " + ex.getMessage());
-        }
+
+            Midia aberta = gerenciador.abrir();
+            if (aberta != null) {
+                carregarLista();
+                JOptionPane.showMessageDialog(this, aberta.toString(), "Mídia", JOptionPane.INFORMATION_MESSAGE);
+
+
+            }
     }
 
     private void excluirMidia() {
@@ -140,7 +139,7 @@ public class View extends JFrame {
         }
 
         try {
-            Midia aberta = gerenciador.abrir(m.getLocal());
+            Midia aberta = gerenciador.abrir();
 
             JTextArea area = new JTextArea();
             area.setEditable(false);

@@ -73,120 +73,48 @@ minutos, músicas em segundos e livros em páginas
         Midia musica = new Musica("A grande Salada",10, "/desktop", 10,robinho , categoria );
         System.out.println(musica);
     }
-    @Test
-    //todo refazer com novos metodos
-    public void CriarArquivoTest() throws IOException {
-        /*
-        * Criar um arquivo com objeto salvo
-        * */
-        //usando somente como teste
-        JFrame frame = new JFrame("Save File Dialog Example");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(400, 300);
-        frame.setVisible(true);
-        //------------------------------------------------------------
-        JFileChooser fileChooser = new JFileChooser();
-        fileChooser.setDialogTitle("Selecione local");
-        fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-        fileChooser.showOpenDialog(frame);
-        String path = fileChooser.getSelectedFile().getAbsolutePath();
-
-        EnumCategoriaMusicas categoria = EnumCategoriaMusicas.KPOP;
-
-        Pessoa robinho = new Pessoa("Robinho");
-        Midia musica = new Musica("A grande Salada",10, "C:\\Users\\gafernandes\\Desktop", 10,robinho , categoria );
-        GerenciadorMidia g = new GerenciadorMidia();
-
-        g.salvar(musica);
-        System.out.println("------------------------------------------------------------------------------");
-
-
-
-
-
-    }
+g
     @Test
     public void moverArquivoTest() throws IOException {
-        //usando somente como teste
-        JFrame frame = new JFrame("Save File Dialog Example");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(400, 300);
-        frame.setVisible(true);
-        //------------------------------------------------------------
-        JFileChooser fileChooser = new JFileChooser();
-        fileChooser.setDialogTitle("Selecione local");
-        fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-        fileChooser.showOpenDialog(frame);
-        String path = fileChooser.getSelectedFile().getAbsolutePath();
+
 
 
         EnumCategoriaMusicas categoria = EnumCategoriaMusicas.KPOP;
         Pessoa robinho = new Pessoa("Robinho");
-        Midia musica = new Musica("A grande Salada", 10, path, 10, robinho, categoria);
+        Midia musica = new Musica("TESTE", 10, "src\\controller\\saves\\", 10, robinho, categoria);
 
         GerenciadorMidia g = new GerenciadorMidia();
 
         g.salvar(musica);
 
 
-        JFileChooser fileChooser2 = new JFileChooser();
-        fileChooser2.setDialogTitle("Selecione local");
-        fileChooser2.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-        fileChooser2.showOpenDialog(frame);
-        String path2 = fileChooser2.getSelectedFile().getAbsolutePath();
-
-
-        System.out.println(g.mover(musica, path2));
+        System.out.println(g.mover(musica));
     }
 
     @Test
     public void abrirArquivoTest() throws IOException {
         GerenciadorMidia g = new GerenciadorMidia();
-        FileNameExtensionFilter filtro = new FileNameExtensionFilter("Arquivos tpoo (*.tpoo)", "tpoo");
-        JFileChooser fileChooser = new JFileChooser(FileSystemView.getFileSystemView());
-        fileChooser.setDialogTitle("Abrir arquivo");
-        fileChooser.setFileFilter(filtro);
-
-
-        //usando somente como teste
-        JFrame frame = new JFrame("Open File Dialog Example");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(400, 300);
-        frame.setVisible(true);
-        //------------------------------------------------------------
-
-        if (fileChooser.showOpenDialog(frame) == JFileChooser.APPROVE_OPTION) {
-
-            System.out.println(g.abrir(fileChooser.getSelectedFile().getAbsolutePath()));
-
-        }
-
-
-
+            System.out.println(g.abrir());
 
     }
 
     @Test
     public void carregarListaTest() throws IOException {
         GerenciadorMidia g = new GerenciadorMidia();
-        FileNameExtensionFilter filtro = new FileNameExtensionFilter("Arquivos tpoo (*.tpoo)", "tpoo");
-        JFileChooser fileChooser = new JFileChooser(FileSystemView.getFileSystemView());
-        fileChooser.setDialogTitle("Abrir arquivo");
-        fileChooser.setFileFilter(filtro);
+
+            System.out.println(g.abrir());
 
 
+    }
+    @Test
+    public void excluirTest() throws IOException {
+        EnumCategoriaMusicas categoria = EnumCategoriaMusicas.KPOP;
+        Pessoa robinho = new Pessoa("Robinho");
+        Midia musica = new Musica("TESTE", 10, "src\\controller\\saves\\", 10, robinho, categoria);
 
-        //usando somente como teste
-        JFrame frame = new JFrame("Open File Dialog Example");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(400, 300);
-        frame.setVisible(true);
-        //------------------------------------------------------------
+        GerenciadorMidia g = new GerenciadorMidia();
 
-        if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+        g.excluir(musica);
 
-            System.out.println(g.abrir(fileChooser.getSelectedFile().getAbsolutePath()));
-
-        }
     }
 }

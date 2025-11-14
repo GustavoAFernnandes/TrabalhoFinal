@@ -3,6 +3,7 @@ package controller;
 import modelo.*;
 
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.filechooser.FileSystemView;
 import java.io.*;
 import java.util.ArrayList;
@@ -17,6 +18,12 @@ public class GerenciadorMidia {
 
         criarLista();
     }
+
+    /*
+     *  uma função que adiciona pra lista os dados dentro de saves,
+     * tanto par achar os arquivos no sistema e poder manipular tudo em um lugar
+     *
+     */
     public void criarLista() {
         // O caminho "recursos" é relativo à pasta raiz do projeto (diretório de trabalho atual)
         String nomeDaPasta = "src\\controller\\saves\\";
@@ -31,8 +38,11 @@ public class GerenciadorMidia {
             if (arquivos != null) {
                 System.out.println("Arquivos na pasta:");
                 for (File arquivo : arquivos) {
-                    lista.add(abrir(arquivo.getAbsolutePath()));
-                    System.out.println("- " + arquivo.getName());
+
+                        lista.add(abrir(arquivo.getAbsolutePath()));
+                        System.out.println("- " + arquivo.getName());
+
+
 
                 }
             }
@@ -42,6 +52,11 @@ public class GerenciadorMidia {
         }
 
     }
+    /*
+     *  uma função que salva uma midia no dirtetorio informado dentro da midia
+     *  também salva no sistema se ainda não existir
+     *
+     */
     public boolean salvar(Midia midia) throws IOException {
         if(midia == null  ) {
             System.out.println("Erro ao salvar: Arquivo é Nulo!");
@@ -51,13 +66,14 @@ public class GerenciadorMidia {
             for (int i = 0; i < lista.size(); i++) {
                 if (lista.get(i).getLocal().equals(midia.getLocal())) {
                     isMidiaExiste = true;
-
                 }
             }
         if (isMidiaExiste){
             System.out.println("Erro ao salvar: Arquivo já existe!");
             return false;
         }else{
+
+
             File f = new File(midia.getLocal());
             try(FileOutputStream fos = new FileOutputStream(f);
                 ObjectOutputStream o = new ObjectOutputStream(fos)) {
@@ -83,49 +99,74 @@ public class GerenciadorMidia {
 
 
     }
-
-    public boolean alterar(Midia midiaAlterada) {
+    /*
+     *  uma função que altera uma midia, excluindo a antiga e salvando a nova no lugar da antiga
+     *
+     */
+    public boolean alterar(Midia midiaAlterada) throws IOException {
         if(midiaAlterada == null  ) {
+            JOptionPane.showMessageDialog(null,"Erro ao Alterar: Arquivo é Nulo!" , "Erro!", JOptionPane.INFORMATION_MESSAGE);
+
             System.out.println("Erro ao Alterar: Arquivo é Nulo!");
             return false ;
         }
         for (int i = 0; i < lista.size(); i++) {
                 if (lista.get(i).getLocal().equals(midiaAlterada.getLocal())) {
-                lista.set(i, midiaAlterada);
-                System.out.println("Alterado com sucesso!");
+                excluir(lista.get(i));
+                salvar(midiaAlterada);
+                    JOptionPane.showMessageDialog(null,"Alterado com sucesso!" , "Sucesso!", JOptionPane.INFORMATION_MESSAGE);
+                    System.out.println("Alterado com sucesso!");
                 return true;
             }
         }
         System.out.println("Erro Desconhecido!");
         return false;
     }
-    // todo adicionar uma validação
+
+
+    /*
+     *  uma função que exclui uma midia
+     *
+     */
     public boolean excluir(Midia midia) {
         if(midia == null  ) {
+            JOptionPane.showMessageDialog(null,"Impossivel Mover Midia Vazia", "Erro!", JOptionPane.INFORMATION_MESSAGE);
 
             return false ;
         }
-        for (int i = 0; i < lista.size(); i++) {
-            if (lista.get(i).getLocal().equals(midia.getLocal())) {
-                File f = new File(lista.get(i).getLocal());
-                if(f.delete()){
-                    lista.remove(midia);
-                    return true;
 
-                }
 
-            }
-        }
-        return false;
+
+
+                    File f = new File(midia.getLocal());
+                    File savedF = new File("src\\controller\\saves\\"+midia.getTitulo());
+                    if (savedF.exists() && savedF.delete()) {
+                        System.out.println("Removido com sucesso da nuvem!");
+                    }
+
+                    if(f.delete()){
+
+
+                        lista.remove(midia);
+                        JOptionPane.showMessageDialog(null,"Midia Removida com sucesso", "Sucesso!", JOptionPane.INFORMATION_MESSAGE);
+
+                        return true;
+
+
+                    } else{
+
+            JOptionPane.showMessageDialog(null,"Erro desconhecido!" , "Erro!", JOptionPane.INFORMATION_MESSAGE);
+            return false;
+                    }
 
 
     }
     //todo entender este codigo
-    public List<Midia> listar(Class<? extends Midia> midia) {
-        return lista.stream()
-                .filter(m -> midia.isInstance(m))
-                .collect(Collectors.toList());
+
+    public List<Midia> getLista() {
+        return lista;
     }
+
     public List<Midia> listar(Enum categoria) {
         return lista.stream()
                 .filter(m -> {
@@ -160,59 +201,137 @@ public class GerenciadorMidia {
                 .sorted(Comparator.comparing(Midia::getTitulo))
                 .collect(Collectors.toList());
     }
+    /*
+     *  uma função que move uma midia de local
+     *  ela procura um novo local com o file chooser
+     *  valida se: existe uma igual, se é nula e qual o tipo de resposta
+     *  chama o metodo de excluir e salvar logo apos
+     *
+     */
+    public String mover(Midia midia) throws IOException {
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setDialogTitle("Selecione local");
+        fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+        int resposta =fileChooser.showOpenDialog(null);
+        if (resposta == JFileChooser.APPROVE_OPTION){
+            String novoLocal = fileChooser.getSelectedFile().getAbsolutePath();
+            if(midia == null  ) {
+                JOptionPane.showMessageDialog(null,"Impossivel Mover Midia Vazia", "Erro!", JOptionPane.INFORMATION_MESSAGE);
 
-    public String mover(Midia midia, String novoLocal) throws IOException {
-        if(midia == null  ) {
+                return "Impossivel Mover Midia Vazia" ;
+            } else if (midia.getLocal().equals(novoLocal)){
+                JOptionPane.showMessageDialog(null,"Uma Midia com o mesmo Nome Já existente neste local", "Erro!", JOptionPane.INFORMATION_MESSAGE);
 
-            return "Impossivel Mover Midia Vazia" ;
-        } else if (midia.getLocal().equals(novoLocal)){
-            return "Uma Midia com o mesmo Nome Já existente neste local";
+                return "Uma Midia com o mesmo Nome Já existente neste local";
 
-        }else{
-            for (int i = 0; i < lista.size(); i++) {
-                if (lista.get(i).getTitulo().equals(midia.getTitulo()) ) {
-                    if (lista.get(i).getLocal().equals(novoLocal)){
+            }else{
 
-                        return "Uma Midia com o mesmo Nome Já existente neste local";
-                    }else {
-                        excluir(lista.get(i));
-                        midia.setLocal(novoLocal);
-                        salvar(midia);
-                        return "Midia Movida com sucesso para: "+midia.getLocal();
+                for (int i = 0; i < lista.size(); i++) {
+                    if (lista.get(i).getTitulo().equals(midia.getTitulo()) ) {
+                        if (lista.get(i).getLocal().equals(novoLocal)){
+
+                            return "Uma Midia com o mesmo Nome Já existente neste local";
+                        }else {
+                            excluir(lista.get(i));
+                            midia.setLocal(novoLocal);
+                            salvar(midia);
+                            JOptionPane.showMessageDialog(null,"Midia Movida com sucesso para: "+midia.getLocal(), "Sucesso!", JOptionPane.INFORMATION_MESSAGE);
+
+                            return "Midia Movida com sucesso para: "+midia.getLocal();
+                        }
+
                     }
-
                 }
             }
-        }
+    }else if (resposta == JFileChooser.CANCEL_OPTION) {
+        JOptionPane.showMessageDialog(null,"Operação cancelada!" , "Erro!", JOptionPane.INFORMATION_MESSAGE);
+
+    }else{
+        JOptionPane.showMessageDialog(null,"Erro desconhecido!" , "Erro!", JOptionPane.INFORMATION_MESSAGE);
+
+    }
+
 
 
         return "Erro desconhecido";
     }
+    /*
+     *  uma função que abre uma midia apartior do computador e retorna está midia
+     *  ela procura uma midia com o file chooser
+     *  valida se: o path n é nu, qual o tipo de resposta
+     *  apos ele da um cast midia e chama o metodo salvar
+     *  retorna midia ( para poder conversar com qualquer metodo ou logica que precise de uma midia do computador )
+     */
+    public Midia abrir() {
+        FileNameExtensionFilter filtro = new FileNameExtensionFilter("Arquivos tpoo (*.tpoo)", "tpoo");
+        JFileChooser fileChooser = new JFileChooser(FileSystemView.getFileSystemView());
+        fileChooser.setDialogTitle("Abrir arquivo");
+        fileChooser.setFileFilter(filtro);
+        int resposta = fileChooser.showOpenDialog(null);
+        if ( resposta == JFileChooser.APPROVE_OPTION) {
+            String path = fileChooser.getSelectedFile().getAbsolutePath();
+
+            if (path != null && !path.trim().isEmpty()) {
+                Midia arquivo;
+                try (FileInputStream fis = new FileInputStream(path);
+                     ObjectInputStream ois = new ObjectInputStream(fis)) {
+                    arquivo = (Midia) ois.readObject();
+                    salvar(arquivo);
+
+                    System.out.println("Arquivo lido com sucesso!");
+                    ois.close();
+                    return arquivo;
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
 
 
-    public Midia abrir(String path) {
-
-
-        if (path != null && !path.trim().isEmpty()) {
-            Midia arquivo;
-            try (FileInputStream fis = new FileInputStream(path);
-                 ObjectInputStream ois = new ObjectInputStream(fis)) {
-                arquivo = (Midia) ois.readObject();
-                salvar(arquivo);
-                System.out.println("Arquivo lido com sucesso!");
-                ois.close();
-                return arquivo;
-            } catch (Exception e) {
-                throw new RuntimeException(e);
             }
 
+
+        }else if (resposta == JFileChooser.CANCEL_OPTION) {
+            JOptionPane.showMessageDialog(null,"Operação cancelada!" , "Erro!", JOptionPane.INFORMATION_MESSAGE);
+
+        }else{
+            JOptionPane.showMessageDialog(null,"Erro desconhecido!" , "Erro!", JOptionPane.INFORMATION_MESSAGE);
 
         }
 
 
         return null;
     }
+    /*
+     *  uma função que abre uma midia apartir do computador e retorna está midia
+     *  similar ao metodo abrir sem parametro, porém usado somente dentro de Gerenciador de arquivos
+     *  é usado em criarLista()
+     *
+     */
+    protected Midia abrir(String path) {
 
+
+
+            if (path != null && !path.trim().isEmpty()) {
+                Midia arquivo;
+                try (FileInputStream fis = new FileInputStream(path);
+                     ObjectInputStream ois = new ObjectInputStream(fis)) {
+                    arquivo = (Midia) ois.readObject();
+                    salvar(arquivo);
+                    System.out.println("Arquivo lido com sucesso!");
+                    ois.close();
+                    return arquivo;
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+
+
+            }
+
+
+
+
+
+        return null;
+    }
 
 
 

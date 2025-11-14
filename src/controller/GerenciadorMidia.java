@@ -42,7 +42,7 @@ public class GerenciadorMidia {
                 System.out.println("Arquivos na pasta:");
                 for (File arquivo : arquivos) {
 
-                        lista.add(abrir(arquivo.getAbsolutePath()));
+                        abrir(arquivo.getAbsolutePath());
                         System.out.println("- " + arquivo.getName());
 
 
@@ -81,7 +81,7 @@ public class GerenciadorMidia {
             try(FileOutputStream fos = new FileOutputStream(f);
                 ObjectOutputStream o = new ObjectOutputStream(fos)) {
                 o.writeObject(midia);
-                System.out.println("Salvo com sucesso!");
+                System.out.println("Salvo com sucesso no diretorio:  " + f.getAbsolutePath());
                 o.close();
                 lista.add(midia);
                 //salva no sistema
@@ -142,7 +142,7 @@ public class GerenciadorMidia {
 
 
                     File f = new File(midia.getLocal());
-                    File savedF = new File("src\\controller\\saves\\"+midia.getTitulo());
+                    File savedF = new File("src\\controller\\saves\\"+midia.getTitulo()+".tpoo");
                     if (savedF.exists() && savedF.delete()) {
                         System.out.println("Removido com sucesso da nuvem!");
                     }
@@ -164,10 +164,10 @@ public class GerenciadorMidia {
 
 
     }
-    //todo entender este codigo
+
 
     public List<Midia> getLista() {
-        return lista;
+        return this.lista;
     }
 
     public List<Midia> listar(Enum categoria) {

@@ -12,6 +12,15 @@ public class Musica extends Midia {
         setArtista(artista);
         setCategoria(categoria);
     }
+    /**
+     * @autor: Rebeca, Amanda e Gustavo
+     * @Versão: 1.0
+     * @throw: IllegalArgumentException se artista ou categoria forem inválidos
+     * @See: ategoria forem inválidos
+     * @param: titulo título da música, memoriaDisco tamanho do arquivo em disco, local diretório onde a música será salva,
+     * segundos duração da música em segundos, artista artista responsável pela música,
+     * Categoria categoria da música, artista novo artista da música, categoria categoria da música
+     */
 
     public Pessoa getArtista() {
         return artista;

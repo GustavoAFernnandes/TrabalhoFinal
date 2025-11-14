@@ -6,7 +6,15 @@ public class Livro extends Midia {
  Pessoa autor;
  EnumCategoriaLivros categoria;
 
-
+     /**
+     * @autor: Rebeca, Amanda e Gustavo
+     * @Versão: 1.0
+     * @throw: IllegalArgumentException se o autor for nulo ou sem nome, IllegalArgumentException se a categoria for inválida
+     * @See: EnumCategoriaFilmes, Pessoa
+     * @param: titulo título do livro, memoriaDisco espaço usado no disco, local caminho onde o livro está salvo,
+     * paginas quantidade de páginas do livro, autor autor do livro e categoria categoria do livro
+     *
+     */
     public Livro(String titulo, double memoriaDisco, String local, int paginas, Pessoa autor,  EnumCategoriaLivros categoria) {
 
         super(titulo,memoriaDisco, local, paginas);

@@ -19,9 +19,12 @@ public class GerenciadorMidia {
         criarLista();
     }
 
-    /*
-     *  uma função que adiciona pra lista os dados dentro de saves,
-     * tanto par achar os arquivos no sistema e poder manipular tudo em um lugar
+    /**
+     * @autor: Rebeca, Amanda e Gustavo
+     * @Versão: 1.0
+     * @throw: IOException Caso ocorra erro de escrita no arquivo
+     * @See: abrir(String)
+     * @param: objeto de midia a ser salvo
      *
      */
     public void criarLista() {

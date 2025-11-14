@@ -24,7 +24,13 @@ public class Filme extends Midia {
 
         this.idiomaAudio = idiomaAudio;
     }
-
+    /**
+     * @autor: Rebeca, Amanda e Gustavo
+     * @Versão: 1.0
+     * @throw: IOException Caso ocorra erro de escrita no arquivo.
+     * @See: EnumCategoriaFilmes
+     * @param: String titulo, double memoriaDisco, String local, int minutos, String idioma, EnumCategoriaFilmes categoria
+     */
     public EnumCategoriaFilmes getCategoria() {
         return categoria;
     }

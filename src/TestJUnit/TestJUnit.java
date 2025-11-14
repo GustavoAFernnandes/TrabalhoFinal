@@ -73,7 +73,20 @@ minutos, músicas em segundos e livros em páginas
         Midia musica = new Musica("A grande Salada",10, "/desktop", 10,robinho , categoria );
         System.out.println(musica);
     }
-g
+    @Test
+    public void criarArquivoTest() throws IOException {
+        EnumCategoriaMusicas categoria = EnumCategoriaMusicas.KPOP;
+        Pessoa robinho = new Pessoa("Robinho");
+        Midia musica = new Musica("TESTE", 10, "src\\controller\\saves\\", 10, robinho, categoria);
+
+        GerenciadorMidia g = new GerenciadorMidia();
+
+        g.salvar(musica);
+
+
+    }
+
+
     @Test
     public void moverArquivoTest() throws IOException {
 

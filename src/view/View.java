@@ -26,11 +26,15 @@ public class View extends JFrame {
         setLocationRelativeTo(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
-        setLayout(new BorderLayout());
+        setLayout(new GridLayout(1, 2));
+
+        JPanel painelEsquerdo = new JPanel();
+        painelEsquerdo.setLayout(new BorderLayout());
 
         // LISTA
         listModel = new DefaultListModel<>();
         listaMidias = new JList<>(listModel);
+        painelEsquerdo.add(new JScrollPane(listaMidias), BorderLayout.CENTER);
         add(new JScrollPane(listaMidias), BorderLayout.CENTER);
 
         // BOTOES
@@ -47,6 +51,10 @@ public class View extends JFrame {
         painelBotoes.add(btnDetalhes);
 
         add(painelBotoes, BorderLayout.SOUTH);
+
+        painelEsquerdo.add(painelBotoes, BorderLayout.SOUTH);
+
+        add(painelEsquerdo, BorderLayout.WEST);
 
         //ABRIR
         btnAbrir.addActionListener(e -> abrirMidia());
@@ -139,15 +147,13 @@ public class View extends JFrame {
         }
 
         try {
-            Midia aberta = gerenciador.abrir();
-
             JTextArea area = new JTextArea();
             area.setEditable(false);
             area.setText(
-                    "Título: " + aberta.getTitulo() + "\n" +
-                            "Duração: " + aberta.getDuracao() + "\n" +
-                            "Local: " + aberta.getLocal() + "\n" +
-                            "Memória: " + aberta.getMemoriaDisco() + "\n"
+                    "Título: " + m.getTitulo() + "\n" +
+                            "Duração: " + m.getDuracao() + "\n" +
+                            "Local: " + m.getLocal() + "\n" +
+                            "Memória: " + m.getMemoriaDisco() + "\n"
             );
 
             JScrollPane scroll = new JScrollPane(area);

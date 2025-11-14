@@ -75,9 +75,12 @@ minutos, músicas em segundos e livros em páginas
     }
     @Test
     public void criarArquivoTest() throws IOException {
+        // um jeito de achar a pasta padrão do usuario sem precisar do caminho absoluto
+        File documentsDir = FileSystemView.getFileSystemView().getDefaultDirectory();
+
         EnumCategoriaMusicas categoria = EnumCategoriaMusicas.KPOP;
         Pessoa robinho = new Pessoa("Robinho");
-        Midia musica = new Musica("TESTE", 10, "src\\controller\\saves\\", 10, robinho, categoria);
+        Midia musica = new Musica("TESTE", 10, documentsDir.getAbsolutePath(), 10, robinho, categoria);
 
         GerenciadorMidia g = new GerenciadorMidia();
 
@@ -89,12 +92,12 @@ minutos, músicas em segundos e livros em páginas
 
     @Test
     public void moverArquivoTest() throws IOException {
-
-
+        // um jeito de achar a pasta padrão do usuario sem precisar do caminho absoluto
+        File documentsDir = FileSystemView.getFileSystemView().getDefaultDirectory();
 
         EnumCategoriaMusicas categoria = EnumCategoriaMusicas.KPOP;
         Pessoa robinho = new Pessoa("Robinho");
-        Midia musica = new Musica("TESTE", 10, "src\\controller\\saves\\", 10, robinho, categoria);
+        Midia musica = new Musica("TESTE", 10, documentsDir.getAbsolutePath(), 10, robinho, categoria);
 
         GerenciadorMidia g = new GerenciadorMidia();
 
